@@ -7,13 +7,14 @@ import { AppService } from './app.service';
   imports: [
     ClientsModule.register([
       {
-        name: 'MATH_SERVICE',
+        name: 'HELLO_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://localhost:5672'],
+          urls: ["amqp://'root':'qwer1234'@localhost:5672/Hello"],
           queue: 'cats_queue',
+          noAck: true,
           queueOptions: {
-            durable: false,
+            durable: true,
           },
         },
       },
