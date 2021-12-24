@@ -1,38 +1,27 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import {
   Ctx,
-  EventPattern,
   Payload,
   RmqContext,
-  ClientProxy,
+  MessagePattern,
 } from '@nestjs/microservices';
-import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    // Inject rabbitmq service
-    @Inject('HELLO_SERVICE')
-    private readonly client: ClientProxy,
-  ) {}
-
-  // rabbitmq controller
-  @Get('health_check')
-  getHello(): string {
-    console.log('getHello');
-    this.client.emit('health_check', 'Working app service');
-    return this.appService.getHello();
-  }
+  constructor() {}
 
   // rabbitmq listner logic
-  @EventPattern('health_check')
-  getNotifications(data: any) {
-    // const channel = context.getChannelRef();
-    // const originalMsg = context.getMessage();
+  @MessagePattern('notification')
+  getNotifications(
+    @Payload()
+    data: number[],
+    @Ctx()
+    context: RmqContext,
+  ) {
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
 
-    // channel.ack(originalMsg);
-    console.log(data);
+    channel.ack(originalMsg);
     return data;
   }
 }
