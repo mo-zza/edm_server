@@ -18,10 +18,11 @@ export class AppController {
     @Ctx()
     context: RmqContext,
   ) {
+    const parmas = data;
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
 
     channel.ack(originalMsg);
-    return data;
+    return 'SalaBula';
   }
 }
